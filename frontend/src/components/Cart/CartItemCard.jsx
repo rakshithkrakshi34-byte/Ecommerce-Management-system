@@ -1,54 +1,76 @@
-import {useCart} from "../../context/CartContext";
+﻿import React from "react";
 
-function CartItemCard({item}) {
-    const  { removeCartItem, updateCartItemQuantity} = useCart();
-
-    function handleRemove() {
-        removeCartItem(item.id);
-    }
+function CartItemCard({ item, onRemove, onQuantityChange }) {
     return (
-        <li
-            key={item.id}
-            className="flex flex-col sm:flex-row items-center dark:bg-gray-800 bg-white p-4 gap-4 rounded-xl shadow-md
-              transition-all duration-300 max-w-screen-xl mx-auto hover:shadow-lg md:hover:scale-105"
-        >
-            {/* Product Image */}
-            <img
-                src={item.product.imageUrl || "https://via.placeholder.com/150"}
-                loading="lazy"
-                alt={item.product.name}
-                className="w-24 h-24 object-contain rounded-lg border dark:border-gray-700"
-            />
+        <div className="flex items-center justify-between p-4 bg-white dark:bg-gray-800 rounded-lg shadow">
 
-            {/* Product Info */}
-            <div className="flex-1 text-center sm:text-left">
-                <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-100">
-                    {item.product.name}
-                </h2>
-                <p className="text-gray-600 dark:text-gray-400">${item.product.price}</p>
+            <div className="flex items-center gap-4">
+
+                <img
+                    src={item.product.imageUrl}
+                    alt={item.product.name}
+                    className="w-20 h-20 object-cover rounded"
+                />
+
+                <div>
+                    <h3 className="font-semibold text-gray-900 dark:text-white">
+                        {item.product.name}
+                    </h3>
+
+                    <p className="text-blue-600 dark:text-blue-400 font-medium">
+                        ₹{Number(item.product.price).toLocaleString("en-IN", {
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2
+                        })}
+                    </p>
+                </div>
+
             </div>
 
-            {/* Quantity Control */}
-            <div className="flex items-center justify-center sm:justify-end gap-4">
+            <div className="flex items-center gap-3">
+
                 <button
-                    className="text-gray-600 dark:text-gray-300 hover:text-red-600 dark:hover:text-red-500 text-xl font-bold px-2"
-                    onClick={ () =>  item.quantity === 1 ? handleRemove() : updateCartItemQuantity(item.id, item.quantity - 1) }
+                    type="button"
+                    onClick={() =>
+                        onQuantityChange(
+                            item.product.id,
+                            Math.max(item.quantity - 1, 1)
+                        )
+                    }
+                    className="px-3 py-1 bg-gray-200 dark:bg-gray-700 rounded"
                 >
-                    −
+                    -
                 </button>
-                <span className="text-gray-800 dark:text-gray-200 font-medium">
+
+                <span className="text-gray-900 dark:text-white">
                     {item.quantity}
                 </span>
+
                 <button
-                    className="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-500 text-xl font-bold px-2"
-                    onClick={ () =>  updateCartItemQuantity(item.id, item.quantity + 1)}
+                    type="button"
+                    onClick={() =>
+                        onQuantityChange(
+                            item.product.id,
+                            item.quantity + 1
+                        )
+                    }
+                    className="px-3 py-1 bg-gray-200 dark:bg-gray-700 rounded"
                 >
                     +
                 </button>
-            </div>
-        </li>
 
-    )
+                <button
+                    type="button"
+                    onClick={() => onRemove(item.product.id)}
+                    className="ml-4 text-red-500 hover:text-red-700"
+                >
+                    Remove
+                </button>
+
+            </div>
+
+        </div>
+    );
 }
 
 export default CartItemCard;

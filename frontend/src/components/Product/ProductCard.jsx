@@ -1,45 +1,34 @@
-import { Link } from "react-router-dom";
-import AddToCartControls from "../Cart/AddToCartControls";
+﻿import { Link } from "react-router-dom";
 
-function ProductCard({ id, img, description, name, price }) {
-    const src =
-        "https://images.unsplash.com/photo-1599481238640-4c1288750d7a?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2664&q=80";
+function ProductCard({ product }) {
+    if (!product) {
+        return null;
+    }
+
+    const { id, name, imageUrl, price } = product;
 
     return (
-        <div
-            className="group rounded-2xl overflow-hidden bg-white dark:bg-gray-800
-                shadow-md hover:shadow-lg dark:hover:shadow-white/10
-                transition duration-300 ease-in-out flex flex-col"
-        >
-            <Link to={`/product/${id}`} className="block w-full flex-1">
-                <div
-                    className="w-full h-56 bg-gray-100 flex items-center justify-center overflow-hidden rounded
-                    group-hover:scale-105 transition-transform duration-300 ease-in-out"
-                >
-                    <img
-                        src={img || src}
-                        alt={name}
-                        className="object-contain w-full h-full"
-                    />
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300">
+            <Link to={`/products/${id}`}>
+                <img
+                    src={imageUrl}
+                    alt={name}
+                    className="w-full h-64 object-cover"
+                />
+
+                <div className="p-5">
+                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white truncate">
+                        {name}
+                    </h3>
+
+                    <p className="mt-2 text-xl font-bold text-blue-600 dark:text-blue-400">
+                        ₹{Number(price).toLocaleString("en-IN", {
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2
+                        })}
+                    </p>
                 </div>
             </Link>
-
-            <div className="p-4 sm:p-6 flex flex-col flex-1">
-                <p className="text-sm font-medium text-gray-500 dark:text-gray-400">
-                    ${price}
-                </p>
-                <h2 className="text-lg font-bold text-gray-800 dark:text-white mt-1">
-                    {name}
-                </h2>
-                <p className="mt-2 text-sm text-gray-600 dark:text-gray-300 line-clamp-2">
-                    {description}
-                </p>
-
-                {/* pushes button to bottom */}
-                <div className="mt-6 mb-2">
-                    <AddToCartControls id={id} />
-                </div>
-            </div>
         </div>
     );
 }
