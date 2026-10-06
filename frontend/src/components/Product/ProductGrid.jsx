@@ -1,4 +1,4 @@
-﻿import { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "../../api/axios";
 import Alert from "../Alert";
 import ProductCard from "./ProductCard";

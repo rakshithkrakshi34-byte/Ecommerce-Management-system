@@ -1,4 +1,4 @@
-﻿import CartItemCard from "./CartItemCard";
+import CartItemCard from "./CartItemCard";
 import { useCart } from "../../context/CartContext";
 import { useNavigate } from "react-router-dom";
 
