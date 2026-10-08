@@ -1,4 +1,4 @@
-﻿apiVersion: apps/v1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: frontend
@@ -15,8 +15,8 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: fullstack-ecommerce-frontend:ci
-          imagePullPolicy: Never
+          image: rakshithkrakshi/fullstack-ecommerce-frontend:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 80
 
