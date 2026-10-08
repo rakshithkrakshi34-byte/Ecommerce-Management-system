@@ -63,7 +63,13 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 
-        configuration.setAllowedOrigins(List.of("http://localhost:3000"));
+        configuration.setAllowedOriginPatterns(List.of(
+                "http://localhost:3000",
+                "http://127.0.0.1:*",
+                "http://localhost:*",
+                "http://my-frontendecom-bucket.s3-website.us-east-2.amazonaws.com"
+        ));
+
         configuration.setAllowedMethods(List.of(
                 "GET",
                 "POST",
@@ -72,6 +78,7 @@ public class SecurityConfig {
                 "DELETE",
                 "OPTIONS"
         ));
+
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true);
 
