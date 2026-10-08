@@ -21,14 +21,17 @@ public class AuthService {
      * Repository for user data.
      */
     private final UserRepository userRepository;
+
     /**
      * Password encoder for hashing passwords.
      */
     private final PasswordEncoder passwordEncoder;
+
     /**
      * Authentication manager for handling authentication.
      */
     private final AuthenticationManager authenticationManager;
+
     /**
      * JWT service for generating and validating tokens.
      */
@@ -37,14 +40,18 @@ public class AuthService {
     /**
      * Constructor for AuthService.
      *
-     * @param userRepository         the repository for user data
-     * @param passwordEncoder        the password encoder for hashing passwords
-     * @param authenticationManager  the authentication manager for handling authentication
-     * @param jwtService             the JWT service for generating and validating tokens
+     * @param userRepository        the repository for user data
+     * @param passwordEncoder       the password encoder for hashing passwords
+     * @param authenticationManager the authentication manager for handling authentication
+     * @param jwtService            the JWT service for generating and validating tokens
      */
     @Autowired
-    public AuthService(UserRepository userRepository, PasswordEncoder passwordEncoder,
-                       AuthenticationManager authenticationManager, JWTService jwtService) {
+    public AuthService(
+            UserRepository userRepository,
+            PasswordEncoder passwordEncoder,
+            AuthenticationManager authenticationManager,
+            JWTService jwtService) {
+
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.authenticationManager = authenticationManager;
@@ -59,6 +66,7 @@ public class AuthService {
      * @throws BadRequestException if the username or email already exists
      */
     public UserResponseDTO register(UserRequestDTO userRequestDTO) {
+
         if (userRepository.existsByUsername(userRequestDTO.getUsername())) {
             throw new BadRequestException("Username already exists");
         }
@@ -74,38 +82,51 @@ public class AuthService {
         );
 
         userRepository.save(user);
-        return new UserResponseDTO(user.getId(), user.getUsername(), user.getEmail());
+
+        return new UserResponseDTO(
+                user.getId(),
+                user.getUsername(),
+                user.getEmail()
+        );
     }
 
     /**
      * Authenticates the user and generates a JWT token.
      *
-     * @param loginRequestDTO contains the username and password
+     * @param loginRequestDTO contains the username/email and password
      * @return JWT token if authentication is successful
      * @throws BadRequestException if authentication fails
      */
     public String login(LoginRequestDTO loginRequestDTO) {
-        try {
-            // Authenticate the user using the authentication manager
-            Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(
-                            loginRequestDTO.getIdentifier(),
-                            loginRequestDTO.getPassword()
-                    )
-            );
 
-            // Check if the authentication was successful
-            UserPrincipal principal = (UserPrincipal) authentication.getPrincipal();
+        try {
+
+            // Authenticate the user using Spring Security
+            Authentication authentication =
+                    authenticationManager.authenticate(
+                            new UsernamePasswordAuthenticationToken(
+                                    loginRequestDTO.getIdentifier(),
+                                    loginRequestDTO.getPassword()
+                            )
+                    );
+
+            // Get the authenticated user
+            UserPrincipal principal =
+                    (UserPrincipal) authentication.getPrincipal();
+
             UserEntity user = principal.getUser();
 
+            // Generate JWT token
             return jwtService.generateToken(user.getUsername());
 
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
+
+            // TEMPORARY DEBUGGING:
+            // Print the real authentication exception to the backend logs.
+            e.printStackTrace();
+
+            // Keep the response sent to the client generic.
             throw new BadRequestException("Invalid username or password");
         }
     }
-
-
-
 }
