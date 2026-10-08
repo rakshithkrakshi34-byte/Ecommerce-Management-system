@@ -1,4 +1,4 @@
-# 🛍️ Full-Stack E-commerce Application
+# 🛍️ Ecommerce Management system
 
 ## 📌 Overview
 
